@@ -47,9 +47,9 @@ def predict():
     gdown.download(url, output, quiet=False)
     urll = './BESTmodel_weights.pt'
     device = torch.device("cpu") if torch.cuda.is_available() else torch.device("cpu")        
-    model = torch.load(urll, map_location=torch.device('cpu'))
-    model.to(device)
-    model.eval() 
+    modell = torch.load(urll, map_location=torch.device('cpu'))
+    modell.to(device)
+    modell.eval() 
 
     BASE_MODEL = "camembert-base"
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
@@ -117,9 +117,9 @@ def predictpara():
     gdown.download(url, output, quiet=False)
     urll = './BESTmodel_weights.pt'
     device = torch.device("cpu") if torch.cuda.is_available() else torch.device("cpu")        
-    model = torch.load(urll, map_location=torch.device('cpu'))
-    model.to(device)
-    model.eval()
+    modell = torch.load(urll, map_location=torch.device('cpu'))
+    modell.to(device)
+    modell.eval()
     BASE_MODEL = "camembert-base"
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
     y_preds = []
