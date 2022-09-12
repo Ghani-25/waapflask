@@ -11,9 +11,7 @@ import os
 import math
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, DataCollatorWithPadding
-import pip
-import sys
-import subprocess
+
 
 
 print(transformers.__version__)
