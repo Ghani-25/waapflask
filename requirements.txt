@@ -6,7 +6,6 @@ torchvision
 numba
 numpy
 pandas
-streamlit
 transformers
 gdown
 sentencepiece==0.1.94
