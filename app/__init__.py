@@ -51,11 +51,14 @@ def predict():
     #if transformers.__version__=='4.1.1':
     #    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'transformers==4.21.3'])
 
-    urll = 'BESTmodel_weights.pt'
+    url = "https://drive.google.com/uc?export=download&id=1rBG3CI5b7uG90TOX7c4mJytdPF560M_F"
+    output = "BESTmodel_weights.pt"
+    gdown.download(url, output, quiet=False)
+    urll = './BESTmodel_weights.pt'
     device = torch.device("cpu") if torch.cuda.is_available() else torch.device("cpu")        
     modell = torch.load(urll, map_location=torch.device('cpu'))
     modell.to(device)
-    modell.eval()    
+    modell.eval()  
 
     BASE_MODEL = "camembert-base"
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
@@ -132,11 +135,14 @@ def paraphraser ():
 
 @app.route('/predictparaphrase', methods = ['POST', 'GET'])
 def predictpara():
-    urll = 'BESTmodel_weights.pt'
+    url = "https://drive.google.com/uc?export=download&id=1rBG3CI5b7uG90TOX7c4mJytdPF560M_F"
+    output = "BESTmodel_weights.pt"
+    gdown.download(url, output, quiet=False)
+    urll = './BESTmodel_weights.pt'
     device = torch.device("cpu") if torch.cuda.is_available() else torch.device("cpu")        
     modell = torch.load(urll, map_location=torch.device('cpu'))
     modell.to(device)
-    modell.eval()   
+    modell.eval() 
     BASE_MODEL = "camembert-base"
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
     y_preds = []
