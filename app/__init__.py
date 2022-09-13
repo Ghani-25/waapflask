@@ -11,6 +11,11 @@ import os
 import math
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, DataCollatorWithPadding
+import pip
+import sys
+import subprocess
+from txtai.pipeline import Translation
+
 
 
 
@@ -27,6 +32,10 @@ target_model_name = 'Ghani-25/parapred_fr_en'
 target_tokenizer = MarianTokenizer.from_pretrained(target_model_name)
 target_model = MarianMTModel.from_pretrained(target_model_name)
 
+#url = "https://github.com/Ghani-25/waapred/raw/master/BESTmodel_weights.pt"
+#output = "BESTmodel_weights.pt"
+#gdown.download(url, output, quiet=False)
+
 
 #create our "home" route using the "index.html" page
 
@@ -42,14 +51,11 @@ def predict():
     #if transformers.__version__=='4.1.1':
     #    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'transformers==4.21.3'])
 
-    url = "https://drive.google.com/uc?export=download&id=1rBG3CI5b7uG90TOX7c4mJytdPF560M_F"
-    output = "BESTmodel_weights.pt"
-    gdown.download(url, output, quiet=False)
-    urll = './BESTmodel_weights.pt'
+    urll = 'BESTmodel_weights.pt'
     device = torch.device("cpu") if torch.cuda.is_available() else torch.device("cpu")        
     modell = torch.load(urll, map_location=torch.device('cpu'))
     modell.to(device)
-    modell.eval() 
+    modell.eval()    
 
     BASE_MODEL = "camembert-base"
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
@@ -67,6 +73,20 @@ def predict():
 @app.route('/predict/paraphrase', methods = ['POST', 'GET'])
 def paraphraser ():
 
+    translate = Translation()
+    languages = ["en", "es", "de", "hi", "ja"]
+    en_texts = request.form.get("comment")
+
+    translations = [translate(en_texts, language) for language in languages]
+
+    english = translate(translations, "fr")
+
+    for x, text in enumerate(translations):
+        #print("Original Language: %s" % languages[x])
+        #print("Translation: %s" % text)
+        return("Paraphrases: %s" % english[0:5] )
+        print()
+    """
     #if transformers.__version__=='4.21.3':
     #    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'transformers==4.1.1'])
     
@@ -108,18 +128,15 @@ def paraphraser ():
     #print(df)
     return render_template('paraphrasedpage.html',  content=aug_texts[0])
     #return(df.to_html())
-
+    """
 
 @app.route('/predictparaphrase', methods = ['POST', 'GET'])
 def predictpara():
-    url = "https://drive.google.com/uc?export=download&id=1rBG3CI5b7uG90TOX7c4mJytdPF560M_F"
-    output = "BESTmodel_weights.pt"
-    gdown.download(url, output, quiet=False)
-    urll = './BESTmodel_weights.pt'
+    urll = 'BESTmodel_weights.pt'
     device = torch.device("cpu") if torch.cuda.is_available() else torch.device("cpu")        
     modell = torch.load(urll, map_location=torch.device('cpu'))
     modell.to(device)
-    modell.eval()
+    modell.eval()   
     BASE_MODEL = "camembert-base"
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
     y_preds = []
