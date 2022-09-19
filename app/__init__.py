@@ -76,7 +76,7 @@ def predict():
 def paraphraser ():
 
     translate = Translation()
-    languages = ["es", "hi"]
+    languages = ["es"]
     en_texts = request.form.get("comment")
 
     translations = [translate(en_texts, language) for language in languages]
