@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, session, redirect
 
 #Import main library
-import streamlit as st
 import gdown
 import torch
 import transformers
