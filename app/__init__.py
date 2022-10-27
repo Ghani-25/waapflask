@@ -66,12 +66,22 @@ def predict():
     encoded = tokenizer(request.form.get("comment"), truncation=True, padding="max_length", max_length=256, return_tensors="pt").to("cpu")
     y_preds += modell(**encoded).logits.reshape(-1).tolist()
 
+    indications = ["Rédiger un message compris entre 100 et 150 caractères", "Mettre la phrase d'accroche en avant", "S'adresser à la personne avec son prénom/nom"]
+    if y_preds[0] <= 20.60 :
+        realvalue = y_preds[0]
+        realone = f'Le taux de prédiction est compris entre {realvalue-((realvalue*11)/100)} et {realvalue+((realvalue*11)/100)}, pensez à modifier votre message en considérant les indications suivantes {*indications,}'
+    elif y_preds[0] > 20.60 and y_preds[0] < 22.99 :
+        realvalue = y_preds[0] * 2.11
+        realone = f'Le taux de prédiction est compris entre {realvalue-((realvalue*11)/100)} et {realvalue+((realvalue*11)/100)}, votre message peut etre amélioré en considérant les indications suivantes {*indications,}'
+    else:
+        realvalue = y_preds[0] * 3.11
+        realone = f'Le taux de prédiction est compris entre {realvalue-((realvalue*11)/100)} et {realvalue+((realvalue*11)/100)}, votre message semblerait être bon :)'
 
     pd.set_option('display.max_rows', 500)
-    df = pd.DataFrame([request.form.get("comment"), y_preds], ["CONTENT", "Prediction"]).T
-    return render_template('simple.html',  tables=[df.to_json(orient = 'records')], titles=df.columns.values)
+    df = pd.DataFrame([request.form.get("comment"), realone], ["CONTENT", "Prediction"]).T
+    return render_template('simple.html',  tables=[df.to_html(classes='data')], titles=request.form.get("comment"), header="true")
     #return df.to_json(orient = 'records')
-
+    """
 @app.route('/predict/paraphrase', methods = ['POST', 'GET'])
 def paraphraser ():
 
@@ -88,7 +98,7 @@ def paraphraser ():
         #print("Translation: %s" % text)
         return("Paraphrases: %s" % english[0:5] )
         print()
-    """
+    
     #if transformers.__version__=='4.21.3':
     #    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'transformers==4.1.1'])
     
