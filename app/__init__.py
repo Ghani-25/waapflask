@@ -13,7 +13,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Data
 import pip
 import sys
 import subprocess
-from txtai.pipeline import Translation
+#from txtai.pipeline import Translation
 
 
 
@@ -23,13 +23,13 @@ print(transformers.__version__)
 app = Flask(__name__)
 
 #import the paraphrasing models
-from transformers import MarianMTModel, MarianTokenizer
-en_model_name = 'Ghani-25/parapred_en_fr'
-en_tokenizer = MarianTokenizer.from_pretrained(en_model_name)
-en_model = MarianMTModel.from_pretrained(en_model_name)
-target_model_name = 'Ghani-25/parapred_fr_en'
-target_tokenizer = MarianTokenizer.from_pretrained(target_model_name)
-target_model = MarianMTModel.from_pretrained(target_model_name)
+#from transformers import MarianMTModel, MarianTokenizer
+#en_model_name = 'Ghani-25/parapred_en_fr'
+#en_tokenizer = MarianTokenizer.from_pretrained(en_model_name)
+#en_model = MarianMTModel.from_pretrained(en_model_name)
+#target_model_name = 'Ghani-25/parapred_fr_en'
+#target_tokenizer = MarianTokenizer.from_pretrained(target_model_name)
+#target_model = MarianMTModel.from_pretrained(target_model_name)
 
 #url = "https://github.com/Ghani-25/waapred/raw/master/BESTmodel_weights.pt"
 #output = "BESTmodel_weights.pt"
@@ -142,26 +142,26 @@ def paraphraser ():
     #return(df.to_html())
     """
 
-@app.route('/predictparaphrase', methods = ['POST', 'GET'])
-def predictpara():
-    url = "https://drive.google.com/uc?export=download&id=1rBG3CI5b7uG90TOX7c4mJytdPF560M_F"
-    output = "BESTmodel_weights.pt"
-    gdown.download(url, output, quiet=False)
-    urll = './BESTmodel_weights.pt'
-    device = torch.device("cpu") if torch.cuda.is_available() else torch.device("cpu")        
-    modell = torch.load(urll, map_location=torch.device('cpu'))
-    modell.to(device)
-    modell.eval() 
-    BASE_MODEL = "camembert-base"
-    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
-    y_preds = []
-    encoded = tokenizer(request.form.get("comment"), truncation=True, padding="max_length", max_length=256, return_tensors="pt").to("cpu")
-    y_preds += modell(**encoded).logits.reshape(-1).tolist()
-    y_predss = y_preds[0]
-    x = random.randint(25,50)
+#@app.route('/predictparaphrase', methods = ['POST', 'GET'])
+#def predictpara():
+    #url = "https://drive.google.com/uc?export=download&id=1rBG3CI5b7uG90TOX7c4mJytdPF560M_F"
+    #output = "BESTmodel_weights.pt"
+    #gdown.download(url, output, quiet=False)
+    #urll = './BESTmodel_weights.pt'
+    #device = torch.device("cpu") if torch.cuda.is_available() else torch.device("cpu")        
+    #modell = torch.load(urll, map_location=torch.device('cpu'))
+    #modell.to(device)
+    #modell.eval() 
+    #BASE_MODEL = "camembert-base"
+    #tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
+    #y_preds = []
+    #encoded = tokenizer(request.form.get("comment"), truncation=True, padding="max_length", max_length=256, return_tensors="pt").to("cpu")
+    #y_preds += modell(**encoded).logits.reshape(-1).tolist()
+    #y_predss = y_preds[0]
+    #x = random.randint(25,50)
 
-    pd.set_option('display.max_rows', 500)
-    df = pd.DataFrame([request.form.get("comment"), y_predss+(y_predss*(x/100))], ["CONTENT", "Prediction"]).T
+    #pd.set_option('display.max_rows', 500)
+    #df = pd.DataFrame([request.form.get("comment"), y_predss+(y_predss*(x/100))], ["CONTENT", "Prediction"]).T
     #return render_template('simple.json',  tables=[df.to_json(orient = 'records')], titles=df.columns.values)
-    return df.to_json(orient = 'records')
+    ##return df.to_json(orient = 'records')
 
